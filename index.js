@@ -5,22 +5,19 @@ class Result {
 		//console.log(raw);
 		this.raw = raw;
 		this.header = header;
-	}
-
-	insertId() {
-		return this.raw.insertId	// Big assumption - Assumes single autoincrement field named id
+		this.insertId = this.raw.insertId;
 	}
 
 	count() {
-		return (this.raw.affectedRows ? this.raw.affectedRows : this.raw[0].count);
+		return (this.raw.affectedRows ? this.raw.affectedRows : this.raw.length);
 	}
 
 	rows() {
-		return this.raw.rows;
+		return this.raw;
 	}
 
 	fields() {
-		return this.raw.fields;
+		return this.header;
 	}
 }
 
@@ -35,6 +32,9 @@ class Connection {
 		if(!cb) {
 			cb = options;
 			options = {};
+		}
+		if(typeof(sql) != 'string') {
+			throw new Error('SQL parameter must be a string');
 		}
 		this.connection.query(sql, options, function(err, result, header) {
 			if(err) {
