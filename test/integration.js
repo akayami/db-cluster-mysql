@@ -1,4 +1,4 @@
-var dbCluster = require('../../db-cluster');
+var dbCluster = require('db-cluster');
 var config = {
 	adapter: require('../index.js'),
 	driver: require('mysql2'),
@@ -74,5 +74,5 @@ describe('MySQL', function() {
 			})
 		});
 	})
-	require('../../db-cluster/test/integration/test.js')(cluster, config);
+	require('db-cluster/test/integration/test')(cluster, config);
 })

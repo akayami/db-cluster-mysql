@@ -1,11 +1,14 @@
 "use strict";
 
+var engine = 'mysql';
+
 class Result {
 	constructor(raw, header) {
 		//console.log(raw);
 		this.raw = raw;
 		this.header = header;
-		this.insertId = this.raw.insertId;
+		this.insertId = (this.raw && this.raw.insertId ? this.raw.insertId : null);
+		this.length = (this.raw && this.raw.length ? this.raw.length : null);
 	}
 
 	count() {
@@ -26,12 +29,16 @@ class Connection {
 
 	constructor(raw) {
 		this.connection = raw;
+		this.engine = engine
+	}
+	init(cb) {
+		cb();
 	}
 
 	query(sql, options, cb) {
 		if(!cb) {
 			cb = options;
-			options = {};
+			options = [];
 		}
 		if(typeof(sql) != 'string') {
 			throw new Error('SQL parameter must be a string');
@@ -109,6 +116,7 @@ class Pool {
 	}
 
 	getConnection(cb) {
+
 		if(!this.pool) {
 			try {
 				this.pool = this.driver.createPool(this.config);
@@ -127,12 +135,17 @@ class Pool {
 
 	end(cb) {
 		if(this.pool) {
-			this.pool.end(cb);
+			this.pool.end(function(err) {
+				cb(err)
+			});
+		} else {
+			cb();
 		}
 	}
 };
 
 module.exports = {
+	engine: engine,
 	getPool: function(driver, object) {
 		return new Pool(driver, object);
 	},
