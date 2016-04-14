@@ -60,7 +60,7 @@ var cluster = dbCluster(config);
 describe('MySQL', function() {
 	beforeEach(function(done) {
 		cluster.master(function(err, conn) {
-			conn.query('CREATE TABLE ?? (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(40))', ['test'], function(err, result) {
+			conn.query('CREATE TABLE ?? (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(40), someval VARCHAR(40) NULL)', ['test'], function(err, result) {
 				conn.release();
 				done(err);
 			})
