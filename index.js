@@ -65,9 +65,11 @@ class Connection {
 		var fieldPh = [];
 		var valuePh = [];
 		fields.forEach(function(field) {
-			fieldPh.push('??');
-			valuePh.push('?')
-			dataArray.push(data[field]);
+			if(data[field] !== undefined) {
+				fieldPh.push('??');
+				valuePh.push('?')
+				dataArray.push(data[field]);
+			}
 		});
 		// Big assumption - Assumes single autoincrement field named id
 		this.query('INSERT INTO ?? (' + fieldPh.join(', ') + ') values (' + valuePh.join(', ') + ')', dataArray, cb);
@@ -79,9 +81,11 @@ class Connection {
 		var dataArray = [table];
 		var fieldPh = [];
 		fields.forEach(function(field, f) {
-			fieldPh.push('??=?');
-			dataArray.push(fields[f]);
-			dataArray.push(data[field]);
+			if(data[field] !== undefined) {
+				fieldPh.push('??=?');
+				dataArray.push(fields[f]);
+				dataArray.push(data[field]);
+			}
 		});
 		cond_params.forEach(function(param) {
 			dataArray.push(param);
