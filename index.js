@@ -51,14 +51,9 @@ class Connection {
 		}.bind({sql: sql}))
 	}
 
-	insert(table, data, options, cb) {
-		if(!cb) {
-			cb = options;
-			options = {};
-		}
+	getInsertData(data) {
 		var fields = Object.keys(data);
-		var values = [];
-		var dataArray = [table];
+		var dataArray = [];
 		for (var f = 0; f < fields.length; f++) {
 			if(data[fields[f]] !== undefined) {
 				dataArray.push(fields[f]);
@@ -67,13 +62,23 @@ class Connection {
 		var fieldPh = [];
 		var valuePh = [];
 		fields.forEach(function(field) {
-			//console.log(data[field]);
 			if(data[field] !== undefined) {
 				fieldPh.push('??');
 				valuePh.push('?')
 				dataArray.push(data[field]);
 			}
 		});
+		return [fieldPh, valuePh, dataArray];
+	}
+
+	insert(table, data, options, cb) {
+		if(!cb) {
+			cb = options;
+			options = {};
+		}
+
+		let [fieldPh, valuePh, dataArray] = this.getInsertData(data);
+		dataArray.unshift(table);
 		// Big assumption - Assumes single autoincrement field named id
 		this.query('INSERT INTO ?? (' + fieldPh.join(', ') + ') values (' + valuePh.join(', ') + ')', dataArray, cb);
 	};
