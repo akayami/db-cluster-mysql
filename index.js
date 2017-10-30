@@ -47,7 +47,7 @@ class Connection {
 			if(err) {
 				err.sql = this.sql;
 			}
-			cb(err, new Result(result, header));
+			cb(err, new Result(result, header), this.sql, options);
 		}.bind({sql: sql}))
 	}
 
@@ -64,7 +64,7 @@ class Connection {
 		fields.forEach(function(field) {
 			if(data[field] !== undefined) {
 				fieldPh.push('??');
-				valuePh.push('?')
+				valuePh.push('?');
 				dataArray.push(data[field]);
 			}
 		});
