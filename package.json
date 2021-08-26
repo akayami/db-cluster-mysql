@@ -9,8 +9,8 @@
   "author": "Tomasz Rakowski",
   "license": "ISC",
   "devDependencies": {
-    "db-cluster": "0.0.5",
-    "mocha": "^2.4.5",
-    "mysql2": "^1.0.0-rc.1"
+    "db-cluster": "0.0.7",
+    "mocha": "^9.1.0",
+    "mysql2": "^2.3.0"
   }
 }

@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var engine = 'mysql';
+const engine = 'mysql';
 
 class Result {
 	constructor(raw, header) {
@@ -29,7 +29,7 @@ class Connection {
 
 	constructor(raw) {
 		this.connection = raw;
-		this.engine = engine
+		this.engine = engine;
 	}
 	init(cb) {
 		cb();
@@ -48,19 +48,19 @@ class Connection {
 				err.sql = this.sql;
 			}
 			cb(err, new Result(result, header), this.sql, options);
-		}.bind({sql: sql}))
+		}.bind({sql: sql}));
 	}
 
 	getInsertData(data) {
-		var fields = Object.keys(data);
-		var dataArray = [];
-		for (var f = 0; f < fields.length; f++) {
+		const fields = Object.keys(data);
+		const dataArray = [];
+		for (let f = 0; f < fields.length; f++) {
 			if(data[fields[f]] !== undefined) {
 				dataArray.push(fields[f]);
 			}
 		}
-		var fieldPh = [];
-		var valuePh = [];
+		const fieldPh = [];
+		const valuePh = [];
 		fields.forEach(function(field) {
 			if(data[field] !== undefined) {
 				fieldPh.push('??');
@@ -77,17 +77,17 @@ class Connection {
 			options = {};
 		}
 
-		let [fieldPh, valuePh, dataArray] = this.getInsertData(data);
+		const [fieldPh, valuePh, dataArray] = this.getInsertData(data);
 		dataArray.unshift(table);
 		// Big assumption - Assumes single autoincrement field named id
 		this.query('INSERT INTO ?? (' + fieldPh.join(', ') + ') values (' + valuePh.join(', ') + ')', dataArray, cb);
-	};
+	}
 
 	update(table, data, condition, cond_params, cb) {
-		var fields = Object.keys(data);
-		var values = [];
-		var dataArray = [table];
-		var fieldPh = [];
+		const fields = Object.keys(data);
+		const values = [];
+		const dataArray = [table];
+		const fieldPh = [];
 		fields.forEach(function(field, f) {
 			if(data[field] !== undefined) {
 				fieldPh.push('??=?');
@@ -97,9 +97,9 @@ class Connection {
 		});
 		cond_params.forEach(function(param) {
 			dataArray.push(param);
-		})
+		});
 		this.query('UPDATE ?? SET ' + fieldPh.join(', ') + ' WHERE ' + condition, dataArray, cb);
-	};
+	}
 
 	beginTransaction(cb, options) {
 		this.connection.beginTransaction(cb);
@@ -119,7 +119,7 @@ class Connection {
 			cb();
 		}
 	}
-};
+}
 
 class Pool {
 	constructor(driver, config) {
@@ -142,19 +142,19 @@ class Pool {
 			} else {
 				cb(null, new Connection(conn));
 			}
-		})
+		});
 	}
 
 	end(cb) {
 		if(this.pool) {
 			this.pool.end(function(err) {
-				cb(err)
+				cb(err);
 			});
 		} else {
 			cb();
 		}
 	}
-};
+}
 
 module.exports = {
 	engine: engine,
@@ -162,6 +162,6 @@ module.exports = {
 		return new Pool(driver, object);
 	},
 	getDriver: function() {
-		return require('mysql2')
+		return require('mysql2');
 	}
 };
